@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Класс описывает представление о коде товара и отражает соответствующую 
@@ -66,7 +67,11 @@ public class ProductCode {
      * 
      * @param code код товара
      */
+    
+    private String prevCode;
+    
     public void setCode(String code) {
+        prevCode = getCode();
         this.code = code;
     }
     
@@ -112,7 +117,7 @@ public class ProductCode {
         /*
          * TODO #06 Реализуйте метод hashCode
          */
-        return code.hashCode();
+        return Objects.hash(code, discountCode, description);
     }
     /**
      * Сравнивает некоторый произвольный объект с текущим объектом типа 
