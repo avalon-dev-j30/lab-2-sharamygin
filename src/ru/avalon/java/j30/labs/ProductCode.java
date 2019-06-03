@@ -117,7 +117,7 @@ public class ProductCode {
         /*
          * TODO #06 Реализуйте метод hashCode
          */
-        return Objects.hash(code, discountCode, description);
+        return code.hashCode();
     }
     /**
      * Сравнивает некоторый произвольный объект с текущим объектом типа 
@@ -128,15 +128,18 @@ public class ProductCode {
      * случае - false.
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object obj) {
         /*
          * TODO #07 Реализуйте метод equals
          */
-        if (o instanceof ProductCode){
-            ProductCode other = (ProductCode) o;
-            return this.code.equals(other.code) || this.description.equals(other.description);
+        if (obj == null || obj.getClass() != getClass()){
+            return false;
         }
-        return false;         
+        else if (obj == this){
+            return true;
+        }
+        ProductCode other = (ProductCode)obj;
+        return code.equals(other.code);
     }
     /**
      * Возвращает строковое представление кода товара.
@@ -175,7 +178,7 @@ public class ProductCode {
         /*
          * TODO #10 Реализуйте метод getInsertQuery
          */
-            String insert =  "insert into PRODUCT_CODE(prod_code, discount_code, description) values (?, ?, ?)";
+            String insert =  "insert into PRODUCT_CODE (prod_code, discount_code, description) values (?, ?, ?)";
             return connection.prepareStatement(insert);
     
     }
@@ -190,7 +193,7 @@ public class ProductCode {
         /*
          * TODO #11 Реализуйте метод getUpdateQuery
          */
-            String upd =  "update PRODUCT_CODE set prod_code = ?, discount_code = ?, description = ? where prod_code = ?";
+            String upd =  "update PRODUCT_CODE " + "set discount_code = ?, description = ? where prod_code = ?";
             return connection.prepareStatement(upd);
         }
 
@@ -229,14 +232,18 @@ public class ProductCode {
         PreparedStatement statement;
         if (products.contains(this)) {
             statement = getUpdateQuery(connection);
-            statement.setString(4, code);
+        statement.setString(1, String.valueOf(discountCode));
+        statement.setString(2, description);
+        statement.setString(3, code);
+        statement.executeUpdate();
         } else {
-            statement = getInsertQuery(connection);
-        }
+        statement = getInsertQuery(connection);
+        
         statement.setString(1, code);
         statement.setString(2, String.valueOf(discountCode));
         statement.setString(3, description);
         statement.execute();
+    }
     }
     /**
      * Возвращает все записи таблицы PRODUCT_CODE в виде коллекции объектов
