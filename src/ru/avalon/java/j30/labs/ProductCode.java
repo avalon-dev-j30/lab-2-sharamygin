@@ -67,11 +67,8 @@ public class ProductCode {
      * 
      * @param code код товара
      */
-    
-    private String prevCode;
-    
+
     public void setCode(String code) {
-        prevCode = getCode();
         this.code = code;
     }
     
